@@ -1,16 +1,114 @@
+class EmptyFrame
 
-class BowlingGame
-
-	def initialize(parser = Parser.new)
-		@parser = parser
+	def compute_score
+		0
 	end
 
-	def score(line)
-		game = @parser.parse(line)
-		game.compute_score
+	def roll(index)
+		0
 	end
 
+	def to_s
+		'|'
+	end
 end
+
+class Frame < EmptyFrame
+
+	def initialize(first, second, next_frame = EMPTY_FRAME)
+		@first = first.to_i
+		@second = second.to_i
+		@next_frame = next_frame
+	end
+
+	attr_reader :first
+	attr_reader :second
+	attr_reader :next_frame
+
+	def compute_score
+		@first + @second + @next_frame.compute_score
+	end
+
+	def roll(index)
+		if index == 0
+			@first
+		elsif index == 1
+			@second
+		else
+			@next_frame.try(index - 1)
+		end
+	end
+	
+	def to_s
+		"|#{@first},#{@second}" + @next_frame.to_s
+	end
+
+	def ==(other)
+		other != nil &&
+			other.first == @first	&&
+			other.second == @second	&&
+			other.next_frame == @next_frame
+	end
+end
+
+class Spare < Frame
+	def initialize(first, next_frame = nil)
+		super(first, 10 - first.to_i, next_frame)
+	end
+	
+	def compute_score
+		@first + @second + @next_frame.first + @next_frame.compute_score
+	end
+end
+
+class Extra < Frame
+
+	def initialize(try, next_frame = EMPTY_FRAME)
+		super(try, 0, next_frame)
+	end
+	
+	def roll(index)
+		if index.zero?
+			@first	
+		else
+			@next_frame.roll(index - 1)
+		end
+	end
+
+	def compute_score
+		0
+	end
+
+	def to_s
+		"|#{@first}" + @next_frame.to_s
+	end
+end
+
+class Strike < Frame
+	
+	def initialize(next_frame = EMPTY_FRAME)
+		super(10, 0, next_frame)
+	end
+
+	def roll(index)
+		if index.zero?
+			10
+		else
+			@next_frame.roll(index - 1)
+		end
+	end
+
+	def compute_score
+		10 + roll(1) + roll(2) + @next_frame.compute_score
+	end
+
+	def to_s
+		'|10' + @next_frame.to_s
+	end
+end
+
+
+EMPTY_FRAME = EmptyFrame.new
 
 class Parser
 	
@@ -56,102 +154,21 @@ class Parser
 				Strike.new(do_parse(line[1..-1], frame_count + 1))
 			end
 		else
-			nil
+			EMPTY_FRAME
 		end
 	end
 end
 
-class Frame
+class BowlingGame
 
-	def initialize(first, second, next_frame = nil)
-		@first = first.to_i
-		@second = second.to_i
-		@next_frame = next_frame
+	def initialize(parser = Parser.new)
+		@parser = parser
 	end
 
-	attr_reader :first
-	attr_reader :second
-	attr_reader :next_frame
-
-	def compute_score
-		@first + @second + (! @next_frame.nil? ? @next_frame.compute_score : 0)
+	def score(line)
+		game = @parser.parse(line)
+		game.compute_score
 	end
 
-	def roll(index)
-		if index == 0
-			@first
-		elsif index == 1
-			@second
-		else
-			@next_frame.nil? ? 0 : @next_frame.try(index - 1)
-		end
-	end
-	
-	def to_s
-		"|#{@first},#{@second}" + (@next_frame != nil ? @next_frame.to_s : '|')
-	end
-
-	def ==(other)
-		other != nil &&
-			other.first == @first	&&
-			other.second == @second	&&
-			other.next_frame == @next_frame
-	end
-end
-
-class Spare < Frame
-	def initialize(first, next_frame = nil)
-		super(first, 10 - first.to_i, next_frame)
-	end
-	
-	def compute_score
-		@first + @second + (@next_frame.nil? ? 0 : @next_frame.first + @next_frame.compute_score)  	
-	end
-end
-
-class Extra < Frame
-
-	def initialize(try, next_frame = nil)
-		super(try, 0, next_frame)
-	end
-	
-	def roll(index)
-		if index.zero?
-			@first	
-		else
-			@next_frame.nil? ? 0 : @next_frame.roll(index - 1)
-		end
-	end
-
-	def compute_score
-		0
-	end
-
-	def to_s
-		"|#{@first}" + (@next_frame != nil ? @next_frame.to_s : '|')
-	end
-end
-
-class Strike < Frame
-	
-	def initialize(next_frame = nil)
-		super(10, 0, next_frame)
-	end
-
-	def roll(index)
-		if index.zero?
-			10
-		else
-			@next_frame.nil? ? 0 : @next_frame.roll(index - 1)
-		end
-	end
-
-	def compute_score
-		10 + roll(1) + roll(2) + (@next_frame.nil? ? 0 : @next_frame.compute_score)
-	end
-
-	def to_s
-		'|10' + (@next_frame != nil ? @next_frame.to_s : '|') 
-	end
 end
 
