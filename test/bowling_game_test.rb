@@ -13,6 +13,10 @@ class BowlingGameTest < Test::Unit::TestCase
 
 	def test_that_can_compute_score_for_spares
 		assert_equal 150, @bowling.score('5/5/5/5/5/5/5/5/5/5/5')
+	end
+
+	def test_that_can_compute_score_for_strikes
+		assert_equal 300, @bowling.score('XXXXXXXXXXXX')
 	end	
 end
 
@@ -65,6 +69,12 @@ class ParserTest < Test::Unit::TestCase
 
 		assert_equal game, @parser.parse('5/5/5/5/5/5/5/5/5/5/5')
 	end
+
+	def test_that_X_is_strike
+		game = Strike.new(Strike.new(Extra.new(0)))
+
+		assert_equal game, @parser.parse('XX-')
+	end
 end
 
 class FrameTest < Test::Unit::TestCase
@@ -73,5 +83,13 @@ class FrameTest < Test::Unit::TestCase
 		game = Frame.new(0, 2, Frame.new(2, 0, Frame.new(3, 4)))
 	
 		assert_equal (2 + 2 + 7), game.compute_score	
+	end
+end
+
+class StrikeTest < Test::Unit::TestCase
+
+	def test_that_score_for_strike_is_10_plus_the_next_two_rolls
+		assert_equal (10 + 10 + 10) + (10 + 10 + 10), Strike.new(Strike.new(Extra.new(10, Extra.new(10)))).compute_score
+		assert_equal (10 + 10 + 5) + (10 + 5 + 0) + 5, Strike.new(Strike.new(Frame.new(5, 0))).compute_score
 	end
 end
