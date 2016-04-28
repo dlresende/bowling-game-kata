@@ -8,6 +8,10 @@ class EmptyFrame
 		0
 	end
 
+	def ==(other)
+		! other.nil? 
+	end
+
 	def to_s
 		'|'
 	end
@@ -15,49 +19,49 @@ end
 
 class Frame < EmptyFrame
 
-	def initialize(first, second, next_frame = EMPTY_FRAME)
-		@first = first.to_i
-		@second = second.to_i
+	def initialize(first_roll, second_roll, next_frame = EMPTY_FRAME)
+		@first_roll = first_roll.to_i
+		@second_roll = second_roll.to_i
 		@next_frame = next_frame
 	end
 
-	attr_reader :first
-	attr_reader :second
+	attr_reader :first_roll
+	attr_reader :second_roll
 	attr_reader :next_frame
 
 	def compute_score
-		@first + @second + @next_frame.compute_score
+		@first_roll + @second_roll + @next_frame.compute_score
 	end
 
 	def roll(index)
 		if index == 0
-			@first
+			@first_roll
 		elsif index == 1
-			@second
+			@second_roll
 		else
 			@next_frame.try(index - 1)
 		end
 	end
 	
 	def to_s
-		"|#{@first},#{@second}" + @next_frame.to_s
+		"|#{@first_roll},#{@second_roll}" + @next_frame.to_s
 	end
 
 	def ==(other)
 		other != nil &&
-			other.first == @first	&&
-			other.second == @second	&&
+			other.first_roll == @first_roll	&&
+			other.second_roll == @second_roll	&&
 			other.next_frame == @next_frame
 	end
 end
 
 class Spare < Frame
-	def initialize(first, next_frame = nil)
-		super(first, 10 - first.to_i, next_frame)
+	def initialize(first_roll, next_frame = nil)
+		super(first_roll, 10 - first_roll.to_i, next_frame)
 	end
 	
 	def compute_score
-		@first + @second + @next_frame.first + @next_frame.compute_score
+		@first_roll + @second_roll + @next_frame.first_roll + @next_frame.compute_score
 	end
 end
 
@@ -69,7 +73,7 @@ class Extra < Frame
 	
 	def roll(index)
 		if index.zero?
-			@first	
+			@first_roll	
 		else
 			@next_frame.roll(index - 1)
 		end
@@ -80,7 +84,7 @@ class Extra < Frame
 	end
 
 	def to_s
-		"|#{@first}" + @next_frame.to_s
+		"|#{@first_roll}" + @next_frame.to_s
 	end
 end
 
