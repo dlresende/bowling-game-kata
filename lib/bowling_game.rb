@@ -43,6 +43,22 @@ class Frame < EmptyFrame
 		end
 	end
 	
+	def chain(last_frame)
+		if is_last_frame?
+			@next_frame = last_frame
+		else
+			@next_frame.chain(last_frame)
+		end
+	
+		self
+	end
+
+	alias >> chain
+
+	def is_last_frame?
+		@next_frame.instance_of? EmptyFrame
+	end
+	
 	def to_s
 		"|#{@first_roll},#{@second_roll}" + @next_frame.to_s
 	end
@@ -50,13 +66,13 @@ class Frame < EmptyFrame
 	def ==(other)
 		other != nil &&
 			other.first_roll == @first_roll	&&
-			other.second_roll == @second_roll	&&
+			other.second_roll == @second_roll &&
 			other.next_frame == @next_frame
 	end
 end
 
 class Spare < Frame
-	def initialize(first_roll, next_frame = nil)
+	def initialize(first_roll, next_frame = EMPTY_FRAME)
 		super(first_roll, 10 - first_roll.to_i, next_frame)
 	end
 	
@@ -113,6 +129,22 @@ end
 
 
 EMPTY_FRAME = EmptyFrame.new
+
+def frame(_1, _2)
+	Frame.new(_1, _2)
+end
+
+def spare(_1)
+	Spare.new(_1)
+end
+
+def strike()
+	Strike.new
+end
+
+def extra(_1)
+	Extra.new(_1)
+end
 
 class Parser
 	
