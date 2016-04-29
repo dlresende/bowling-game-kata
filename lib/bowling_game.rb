@@ -53,7 +53,7 @@ class Frame < EmptyFrame
 		self
 	end
 
-	alias >> chain
+	alias + chain
 
 	def is_last_frame?
 		@next_frame.instance_of? EmptyFrame
