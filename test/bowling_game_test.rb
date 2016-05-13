@@ -45,7 +45,7 @@ class ParserTest < Test::Unit::TestCase
 	end
 
 	def test_that_extra_tries_are_handled
-		game = spare(5) + spare(5) + spare(5) + spare(5) + spare(5) + spare(5) + spare(5) + spare(5) + spare(5) + spare(5) + extra(5) 
+		game = spare(5) * 10 + extra(5) 
  
 		assert_equal game, @parser.parse('5/5/5/5/5/5/5/5/5/5/5')
 	end
@@ -70,6 +70,13 @@ class FrameTest < Test::Unit::TestCase
 
 		assert_equal Frame.new(1, 1, Frame.new(2, 2, Frame.new(3, 3))), game
 	end
+
+	def test_that_frames_can_be_created_using_the_times_notation
+		game = frame(1, 1) * 3
+
+		assert_equal Frame.new(1, 1, Frame.new(1, 1, Frame.new(1, 1))), game
+	end
+
 end
 
 class StrikeTest < Test::Unit::TestCase

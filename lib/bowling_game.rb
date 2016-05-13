@@ -42,23 +42,34 @@ class Frame < EmptyFrame
 			@next_frame.try(index - 1)
 		end
 	end
-	
+
 	def chain(last_frame)
 		if is_last_frame?
 			@next_frame = last_frame
 		else
 			@next_frame.chain(last_frame)
 		end
-	
+
 		self
 	end
 
 	alias + chain
 
+	def times(n, count_current = true)
+		return self if n.zero?
+	
+		n = count_current ? n - 1 : n
+		@next_frame = clone
+		@next_frame.times(n - 1, false)
+		self
+	end
+
+	alias * times
+
 	def is_last_frame?
 		@next_frame.instance_of? EmptyFrame
 	end
-	
+
 	def to_s
 		"|#{@first_roll},#{@second_roll}" + @next_frame.to_s
 	end
@@ -75,7 +86,7 @@ class Spare < Frame
 	def initialize(first_roll, next_frame = EMPTY_FRAME)
 		super(first_roll, 10 - first_roll.to_i, next_frame)
 	end
-	
+
 	def compute_score
 		@first_roll + @second_roll + @next_frame.first_roll + @next_frame.compute_score
 	end
@@ -86,7 +97,7 @@ class Extra < Frame
 	def initialize(try, next_frame = EMPTY_FRAME)
 		super(try, 0, next_frame)
 	end
-	
+
 	def roll(index)
 		if index.zero?
 			@first_roll	
@@ -105,7 +116,7 @@ class Extra < Frame
 end
 
 class Strike < Frame
-	
+
 	def initialize(next_frame = EMPTY_FRAME)
 		super(10, 0, next_frame)
 	end
@@ -147,7 +158,7 @@ def extra(_1)
 end
 
 class Parser
-	
+
 	SIMPLE_FRAME_OR_EXTRA_TRY = /^(\d)(\d)?/ 
 	FIRST_TRY_MISSED = /^-(\d)/
 	SECOND_TRY_MISSED = /^(\d)-/
@@ -196,7 +207,6 @@ class Parser
 end
 
 class BowlingGame
-
 	def initialize(parser = Parser.new)
 		@parser = parser
 	end
@@ -205,6 +215,5 @@ class BowlingGame
 		game = @parser.parse(line)
 		game.compute_score
 	end
-
 end
 
