@@ -26,7 +26,7 @@ public class Game {
 
 	public void addExtra(int roll) {
 		Extra extra = new Extra(roll);
-		frames.add(extra);
+		add(extra);
 	}
 
 	private int computeScoreFor(Frame current){
@@ -34,15 +34,15 @@ public class Game {
 	}
 
 	private int computeScoreFor(Spare current){
-		return current.score() + nextFor(current).firstTry;
+		return current.score() + frameAfter(current).firstTry;
 	}
 
-	private int roll(int rollStartingFromCurrent, Frame current) {
-		return current.roll(rollStartingFromCurrent, this);	
+	private int roll(int rollNumber, Frame current) {
+		return current.roll(rollNumber, this);	
 	}
 
 	private int computeScoreFor(Strike current) {
-		Frame next = nextFor(current);
+		Frame next = frameAfter(current);
 		return current.score() + next.roll(1, this) + next.roll(2, this);
 	}
 
@@ -50,7 +50,7 @@ public class Game {
 		return current.score();
 	}
 	
-	private Frame nextFor(Frame frame) {
+	private Frame frameAfter(Frame frame) {
 		int frameIndex = frames.indexOf(frame);
 
 		if(frameIndex == -1) {
@@ -96,7 +96,7 @@ public class Game {
 				return secondTry;
 			}
 
-			return game.nextFor(this).roll(roll - 2, game);
+			return game.frameAfter(this).roll(roll - 2, game);
 		}
 	}
 
@@ -127,7 +127,7 @@ public class Game {
 				return 10;
 			}
 
-			return game.nextFor(this).roll(roll - 1, game);
+			return game.frameAfter(this).roll(roll - 1, game);
 		}
 	}
 
@@ -152,7 +152,7 @@ public class Game {
 				return 10;
 			}
 
-			return game.nextFor(this).roll(roll - 1, game);
+			return game.frameAfter(this).roll(roll - 1, game);
 		}
 	}
 
@@ -160,11 +160,6 @@ public class Game {
 	class EmptyFrame extends Frame {
 		public EmptyFrame() {
 			super(0, 0);
-		}
-		
-		@Override
-		public int roll(int roll, Game game) {
-			return 0;
 		}
 	}
 }
