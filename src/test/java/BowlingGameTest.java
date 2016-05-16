@@ -25,4 +25,11 @@ public class BowlingGameTest {
 
 		assertThat(score, is(150));
 	}
+
+	@Test
+	public void should_compute_score_for_strikes() {
+		int score = game.computeScore("XXXXXXXXXXXX");
+
+		assertThat(score, is(300));
+	}
 }

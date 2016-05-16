@@ -18,7 +18,19 @@ public class LineParser {
 
 		char firstTry = frames.charAt(0);
 
-		if(isDigit(firstTry)) {
+		if(firstTry == 'X') {
+			if(frame > 10) {
+				game.addExtra(10);
+				parse(frames.substring(1), game, frame + 1);
+			}
+			
+			else {
+				game.addStrike();
+				parse(frames.substring(1), game, frame + 1);
+			}
+		}
+
+		else if(isDigit(firstTry)) {
 			int _1 = getNumericValue(firstTry);
 
 			if(frame > 10) {

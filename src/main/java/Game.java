@@ -11,12 +11,17 @@ public class Game {
 
 	public void addFrame(int firstRoll, int secondRoll) {
 		Frame frame = new Frame(firstRoll, secondRoll);
-		frames.add(frame);
+		add(frame);
 	}
 
 	public void addSpare(int firstRoll) {
 		Spare spare = new Spare(firstRoll);
-		frames.add(spare);
+		add(spare);
+	}
+
+	public void addStrike() {
+		Strike strike = new Strike();
+		add(strike);
 	}
 
 	public void addExtra(int roll) {
@@ -32,13 +37,31 @@ public class Game {
 		return current.score() + nextFor(current).firstRoll;
 	}
 
+	private int roll(int rollStartingFromCurrent, Frame current) {
+		return current.roll(rollStartingFromCurrent, this);	
+	}
+
+	private int computeScoreFor(Strike current) {
+		Frame next = nextFor(current);
+		return current.score() + next.roll(1, this) + next.roll(2, this);
+	}
+
 	private int computeScoreFor(Extra current) {
 		return current.score();
 	}
 	
 	private Frame nextFor(Frame frame) {
 		int frameIndex = frames.indexOf(frame);
-		return frames.get(frameIndex + 1);
+
+		if(frameIndex == -1) {
+			throw new IllegalArgumentException("Frame " + frame + " does not exist.");
+		}
+
+		try {
+			return frames.get(frameIndex + 1);
+		} catch(IndexOutOfBoundsException exception) {
+			return new EmptyFrame();
+		}
 	}
 
 	private void add(Frame frame) {
@@ -63,16 +86,48 @@ public class Game {
 		public int score(Game game) {
 			return game.computeScoreFor(this);
 		}
+
+		public int roll(int roll, Game game) {
+			if(roll == 1) {
+				return firstRoll;
+			}
+
+			if(roll == 2) {
+				return secondRoll;
+			}
+
+			return game.nextFor(this).roll(roll - 2, game);
+		}
 	}
 
 	class Spare extends Frame {
 		public Spare(int _1) {
 			super(_1, 10 - _1);
 		}
-		
+	
 		@Override
 		public int score(Game game) {
 			return game.computeScoreFor(this);
+		}
+	}
+
+	class Strike extends Frame {
+		public Strike() {
+			super(10, 0);
+		}
+
+		@Override
+		public int score(Game game) {
+			return game.computeScoreFor(this);
+		}
+
+		@Override
+		public int roll(int roll, Game game) {
+			if(roll == 1) {
+				return 10;
+			}
+
+			return game.nextFor(this).roll(roll - 1, game);
 		}
 	}
 
@@ -89,6 +144,27 @@ public class Game {
 		@Override
 		public int score(Game game) {
 			return game.computeScoreFor(this);
+		}
+		
+		@Override
+		public int roll(int roll, Game game) {
+			if(roll == 1) {
+				return 10;
+			}
+
+			return game.nextFor(this).roll(roll - 1, game);
+		}
+	}
+
+	// Null object
+	class EmptyFrame extends Frame {
+		public EmptyFrame() {
+			super(0, 0);
+		}
+		
+		@Override
+		public int roll(int roll, Game game) {
+			return 0;
 		}
 	}
 }

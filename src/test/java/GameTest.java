@@ -45,4 +45,15 @@ public class GameTest {
 		
 		assertThat(score, is(1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + (10 + 5)));
 	}
+
+	@Test
+	public void should_compute_score_for_strikes() {
+		Game strikes = new Game();
+		strikes.addStrike();
+		strikes.addFrame(2, 2);
+
+		int score = strikes.score();
+
+		assertThat(score, is(10+2+2 + 2+2));
+	}
 }

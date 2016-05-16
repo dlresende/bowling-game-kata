@@ -40,5 +40,11 @@ public class LineParserTest {
 		assertThat(extraFrames.score(), is(1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + (10 + 5)));
 	}
 
+	@Test
+	public void should_parse_X_as_strikes() {
+		Game strikes = lineParser.parse("XXXXXXXXXXXX");
+
+		assertThat(strikes.score(), is(10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10));
+	}
 
 }
