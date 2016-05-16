@@ -6,11 +6,11 @@ public class LineParser {
 	public Game parse(String line) {
 		Game game = new Game();
 		String lineWithoutHyphen = line.replace("-", "0");
-		parse(lineWithoutHyphen, game);
+		parse(lineWithoutHyphen, game, 1);
 		return game;
 	}
 
-	private void parse(String frames, Game game) { 
+	private void parse(String frames, Game game, int frame) { 
 
 		if(frames.isEmpty()) {
 			return;
@@ -20,10 +20,26 @@ public class LineParser {
 
 		if(isDigit(firstTry)) {
 			int _1 = getNumericValue(firstTry);
-			char secondRoll = frames.charAt(1);
-			int _2 = getNumericValue(secondRoll);
-			game.addFrame(_1, _2);
-			parse(frames.substring(2), game);
+
+			if(frame > 10) {
+				game.addExtra(_1);
+				parse(frames.substring(1), game, frame + 1);
+			}
+
+			else {
+				char secondRoll = frames.charAt(1);
+
+				if(secondRoll == '/') {
+					game.addSpare(_1);
+					parse(frames.substring(2), game, frame + 1);
+				}
+
+				else {
+					int _2 = getNumericValue(secondRoll);
+					game.addFrame(_1, _2);
+					parse(frames.substring(2), game, frame + 1);
+				}
+			}
 		}
 
 		else {

@@ -18,4 +18,11 @@ public class BowlingGameTest {
 
 		assertThat(score, is(90));
 	}
+
+	@Test
+	public void should_compute_score_for_spares() {
+		int score = game.computeScore("5/5/5/5/5/5/5/5/5/5/5");
+
+		assertThat(score, is(150));
+	}
 }

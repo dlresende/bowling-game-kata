@@ -25,4 +25,20 @@ public class LineParserTest {
 
 		assertThat(secondRollMissed.score(), is(5 + 4));
 	}
+
+	@Test
+	public void should_parse_slash_as_spares() {
+		Game spares = lineParser.parse("5/--");
+	
+		assertThat(spares.score(), is(10));
+	}
+
+	@Test
+	public void should_parse_extra_frames() {
+		Game extraFrames = lineParser.parse("0-1-2-3-4-5-6-7-8-9/5");
+
+		assertThat(extraFrames.score(), is(1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + (10 + 5)));
+	}
+
+
 }
