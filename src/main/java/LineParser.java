@@ -16,9 +16,9 @@ public class LineParser {
 			return;
 		}
 
-		char firstTry = frames.charAt(0);
+		char firstRoll = frames.charAt(0);
 
-		if(firstTry == 'X') {
+		if(firstRoll == 'X') {
 			if(frame > 10) {
 				game.addExtra(10);
 				parse(frames.substring(1), game, frame + 1);
@@ -30,8 +30,8 @@ public class LineParser {
 			}
 		}
 
-		else if(isDigit(firstTry)) {
-			int _1 = getNumericValue(firstTry);
+		else if(isDigit(firstRoll)) {
+			int _1 = getNumericValue(firstRoll);
 
 			if(frame > 10) {
 				game.addExtra(_1);

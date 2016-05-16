@@ -9,13 +9,13 @@ public class Game {
 		return frames.stream().mapToInt((frame) -> frame.score(this)).sum();
 	}
 
-	public void addFrame(int firstRoll, int secondRoll) {
-		Frame frame = new Frame(firstRoll, secondRoll);
+	public void addFrame(int firstTry, int secondTry) {
+		Frame frame = new Frame(firstTry, secondTry);
 		add(frame);
 	}
 
-	public void addSpare(int firstRoll) {
-		Spare spare = new Spare(firstRoll);
+	public void addSpare(int firstTry) {
+		Spare spare = new Spare(firstTry);
 		add(spare);
 	}
 
@@ -34,7 +34,7 @@ public class Game {
 	}
 
 	private int computeScoreFor(Spare current){
-		return current.score() + nextFor(current).firstRoll;
+		return current.score() + nextFor(current).firstTry;
 	}
 
 	private int roll(int rollStartingFromCurrent, Frame current) {
@@ -71,16 +71,16 @@ public class Game {
 	// Elements
 	class Frame {
 
-		private final int firstRoll;
-		private final int secondRoll;
+		private final int firstTry;
+		private final int secondTry;
 
 		public Frame(int _1, int _2) {
-			firstRoll = _1;
-			secondRoll = _2;
+			firstTry = _1;
+			secondTry = _2;
 		}
 
 		public int score() {
-			return firstRoll + secondRoll;
+			return firstTry + secondTry;
 		}
 		
 		public int score(Game game) {
@@ -89,11 +89,11 @@ public class Game {
 
 		public int roll(int roll, Game game) {
 			if(roll == 1) {
-				return firstRoll;
+				return firstTry;
 			}
 
 			if(roll == 2) {
-				return secondRoll;
+				return secondTry;
 			}
 
 			return game.nextFor(this).roll(roll - 2, game);
