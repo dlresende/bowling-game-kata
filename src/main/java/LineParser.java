@@ -18,8 +18,8 @@ public class LineParser {
 
 		char firstRoll = frames.charAt(0);
 
-		if(firstRoll == 'X') {
-			if(frame > 10) {
+		if(isStrike(firstRoll)) {
+			if(isExtra(frame)) {
 				game.addExtra(10);
 				parse(frames.substring(1), game, frame + 1);
 			}
@@ -33,7 +33,7 @@ public class LineParser {
 		else if(isDigit(firstRoll)) {
 			int _1 = getNumericValue(firstRoll);
 
-			if(frame > 10) {
+			if(isExtra(frame)) {
 				game.addExtra(_1);
 				parse(frames.substring(1), game, frame + 1);
 			}
@@ -41,7 +41,7 @@ public class LineParser {
 			else {
 				char secondRoll = frames.charAt(1);
 
-				if(secondRoll == '/') {
+				if(isSpare(secondRoll)) {
 					game.addSpare(_1);
 					parse(frames.substring(2), game, frame + 1);
 				}
@@ -57,5 +57,17 @@ public class LineParser {
 		else {
 			throw new IllegalStateException(frames);
 		}
+	}
+
+	private boolean isStrike(char roll) {
+		return roll == 'X';
+	}
+
+	private boolean isExtra(int frame) {
+		return frame > 10;
+	}
+
+	private boolean isSpare(char roll) {
+		return roll == '/';
 	}
 }
