@@ -34,11 +34,8 @@ public class Game {
 	}
 
 	private int computeScoreFor(Spare current){
-		return current.score() + frameAfter(current).firstTry;
-	}
-
-	private int roll(int rollNumber, Frame current) {
-		return current.roll(rollNumber, this);	
+		Frame next = frameAfter(current);
+		return current.score() + next.roll(1, this);
 	}
 
 	private int computeScoreFor(Strike current) {
@@ -79,8 +76,16 @@ public class Game {
 			secondTry = _2;
 		}
 
+		public int firstTry() {
+			return firstTry;
+		}
+
+		public int secondTry() {
+			return secondTry;
+		}
+
 		public int score() {
-			return firstTry + secondTry;
+			return firstTry() + secondTry();
 		}
 		
 		public int score(Game game) {
@@ -89,14 +94,18 @@ public class Game {
 
 		public int roll(int roll, Game game) {
 			if(roll == 1) {
-				return firstTry;
+				return firstTry();
 			}
 
 			if(roll == 2) {
-				return secondTry;
+				return secondTry();
 			}
 
-			return game.frameAfter(this).roll(roll - 2, game);
+			return nextFrame(game).roll(roll - 2, game);
+		}
+
+		protected Frame nextFrame(Game game) {
+			return game.frameAfter(this);
 		}
 	}
 
@@ -109,11 +118,21 @@ public class Game {
 		public int score(Game game) {
 			return game.computeScoreFor(this);
 		}
+		
+		@Override
+		protected Frame nextFrame(Game game) {
+			return game.frameAfter(this);
+		}
 	}
 
 	class Strike extends Frame {
 		public Strike() {
 			super(10, 0);
+		}
+
+		@Override
+		public int score() {
+			return 10;
 		}
 
 		@Override
@@ -127,7 +146,17 @@ public class Game {
 				return 10;
 			}
 
-			return game.frameAfter(this).roll(roll - 1, game);
+			return nextFrame(game).roll(roll - 1, game);
+		}
+		
+		@Override
+		protected Frame nextFrame(Game game) {
+			return game.frameAfter(this);
+		}
+
+		@Override
+		public int secondTry() {
+			throw new IllegalStateException("There isn't a second try for Strikes.");
 		}
 	}
 
@@ -149,10 +178,20 @@ public class Game {
 		@Override
 		public int roll(int roll, Game game) {
 			if(roll == 1) {
-				return 10;
+				return firstTry();
 			}
 
-			return game.frameAfter(this).roll(roll - 1, game);
+			return nextFrame(game).roll(roll - 1, game);
+		}
+		
+		@Override
+		protected Frame nextFrame(Game game) {
+			return game.frameAfter(this);
+		}
+		
+		@Override
+		public int secondTry() {
+			throw new IllegalStateException("There isn't a second try for Extra frames.");
 		}
 	}
 
@@ -161,6 +200,12 @@ public class Game {
 		public EmptyFrame() {
 			super(0, 0);
 		}
+
+		@Override
+		protected Frame nextFrame(Game game) {
+			return this;
+		}
+
 	}
 }
 
