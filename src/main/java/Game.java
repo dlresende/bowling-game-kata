@@ -66,12 +66,12 @@ public class Game {
 	}
 
 	// Elements
-	class Frame {
+	static class Frame {
 
 		private final int firstTry;
 		private final int secondTry;
 
-		public Frame(int _1, int _2) {
+		Frame(int _1, int _2) {
 			firstTry = _1;
 			secondTry = _2;
 		}
@@ -109,8 +109,8 @@ public class Game {
 		}
 	}
 
-	class Spare extends Frame {
-		public Spare(int _1) {
+	static class Spare extends Frame {
+		Spare(int _1) {
 			super(_1, 10 - _1);
 		}
 	
@@ -125,8 +125,8 @@ public class Game {
 		}
 	}
 
-	class Strike extends Frame {
-		public Strike() {
+	static class Strike extends Frame {
+		Strike() {
 			super(10, 0);
 		}
 
@@ -160,8 +160,8 @@ public class Game {
 		}
 	}
 
-	class Extra extends Frame {
-		public Extra(int _1) {
+	static class Extra extends Frame {
+		Extra(int _1) {
 			super(_1, 0);
 		}
 
@@ -197,7 +197,7 @@ public class Game {
 
 	// Null object
 	class EmptyFrame extends Frame {
-		public EmptyFrame() {
+		EmptyFrame() {
 			super(0, 0);
 		}
 
