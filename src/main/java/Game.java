@@ -29,21 +29,21 @@ public class Game {
 		add(extra);
 	}
 
-	private int computeScoreFor(Frame current){
+	private int computeScoreForFrame(Frame current){
 		return current.score();
 	}
 
-	private int computeScoreFor(Spare current){
+	private int computeScoreForSpare(Spare current){
 		Frame next = frameAfter(current);
 		return current.score() + next.roll(1, this);
 	}
 
-	private int computeScoreFor(Strike current) {
+	private int computeScoreForStrike(Strike current) {
 		Frame next = frameAfter(current);
 		return current.score() + next.roll(1, this) + next.roll(2, this);
 	}
 
-	private int computeScoreFor(Extra current) {
+	private int computeScoreForExtra(Extra current) {
 		return current.score();
 	}
 	
@@ -89,7 +89,7 @@ public class Game {
 		}
 		
 		public int score(Game game) {
-			return game.computeScoreFor(this);
+			return game.computeScoreForFrame(this);
 		}
 
 		public int roll(int roll, Game game) {
@@ -116,7 +116,7 @@ public class Game {
 	
 		@Override
 		public int score(Game game) {
-			return game.computeScoreFor(this);
+			return game.computeScoreForSpare(this);
 		}
 		
 		@Override
@@ -137,7 +137,7 @@ public class Game {
 
 		@Override
 		public int score(Game game) {
-			return game.computeScoreFor(this);
+			return game.computeScoreForStrike(this);
 		}
 
 		@Override
@@ -172,7 +172,7 @@ public class Game {
 
 		@Override
 		public int score(Game game) {
-			return game.computeScoreFor(this);
+			return game.computeScoreForExtra(this);
 		}
 		
 		@Override
