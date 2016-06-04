@@ -4,9 +4,14 @@ import static java.lang.Character.getNumericValue;
 public class LineParser {
 
 	public Game parse(String line) {
+		String lineWithoutHyphens = line.replace("-", "0");
+		return parse(lineWithoutHyphens, 1);
+	}
+
+
+	private Game parse(String frames, int frame) {
 		Game game = new Game();
-		String lineWithoutHyphen = line.replace("-", "0");
-		parse(lineWithoutHyphen, game, 1);
+		parse(frames, game, frame);
 		return game;
 	}
 
