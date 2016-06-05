@@ -19,4 +19,8 @@ class BowlingGameSuite extends FunSuite {
 	test("should not compute extra frames") {
 		assert(game.score("0000000000000000005/5") === 15)
 	}
+
+	test("should compute score for strikes") {
+		assert(game.score("XXXXXXXXXXXX") === 300)
+	}
 }
