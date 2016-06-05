@@ -11,4 +11,9 @@ class BowlingGameSuite extends FunSuite {
 		val game = new BowlingGame
 		assert(game.score("9--99-9-9-9-9-9-9-9-") === 90)
 	}
+
+	test("should compute score for spares") {
+		val game = new BowlingGame
+		assert(game.score("5/5/5/5/5/5/5/5/5/5/5") === 150)
+	}
 }
