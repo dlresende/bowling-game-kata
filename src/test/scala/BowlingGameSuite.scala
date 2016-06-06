@@ -21,9 +21,13 @@ class BowlingGameSuite extends FunSuite {
 	}
 
 	test("should compute score for strikes") {
+		assert(game.score("X54----------------") === 10+5+4 + 5+4)
 		assert(game.score("XXXXXXXXXXXX") === 300)
 		assert(game.score("X5/----------------") === 10+5+5 + 5+5)
-		assert(game.score("X54----------------") === 10+5+4 + 5+4)
 		assert(game.score("1/35XXX458/X3/XX6") === 10+3 + 3+5 + 10+10+10 + 10+10+4 + 10+4+5 + 4+5 + 10+10 + 10+3+7 + 10+10 + 10+10+6)
+	}
+
+	test("should not add rolls beyond the 10th roll into the score") {
+		assert(game.score("XXXXXXXXXX12") === 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+1 + 10+1+2)
 	}
 }
