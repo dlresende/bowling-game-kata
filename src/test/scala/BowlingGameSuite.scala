@@ -24,5 +24,6 @@ class BowlingGameSuite extends FunSuite {
 		assert(game.score("XXXXXXXXXXXX") === 300)
 		assert(game.score("X5/----------------") === 10+5+5 + 5+5)
 		assert(game.score("X54----------------") === 10+5+4 + 5+4)
+		assert(game.score("1/35XXX458/X3/XX6") === 10+3 + 3+5 + 10+10+10 + 10+10+4 + 10+4+5 + 4+5 + 10+10 + 10+3+7 + 10+10 + 10+10+6)
 	}
 }

@@ -6,6 +6,7 @@ class BowlingGame {
 	val spareFollowedByStrike	= "^\\d/(X.*)".r
 	val strikeFollowedBy2Strikes	= "^X(XX.*)".r
 	val strikeFollowedBySpare	= "^X(\\d/.*)".r
+	val strikeFollowedByStrike	= "^XX(\\d)(.*)".r
 	val strike			= "^X(\\d)(\\d)(.*)".r
 
 	def score(line: String) = {
@@ -19,6 +20,7 @@ class BowlingGame {
 			case spare(_3, next) => 10 + _3.toInt + computeScore(_3 + next)
 			case strikeFollowedBy2Strikes(next) => 30 + computeScore(next)
 			case strikeFollowedBySpare(next) => 20 + computeScore(next)
+			case strikeFollowedByStrike(_3, next) => 20 + _3.toInt + computeScore("X" + _3 + next) // String interpolation seems not to work with scala 2.9.2 under Ubuntu :/
 			case strike(_2, _3, next) => 10 + _2.toInt + _3.toInt + computeScore(_2 + _3 + next)
 			case _ => 0
 		}
