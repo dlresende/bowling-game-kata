@@ -1,6 +1,6 @@
 name := "bowling-game"
 
-scalaVersion := "2.9.2"
+scalaVersion := "2.12.1"
 
-libraryDependencies += "org.scalatest" % "scalatest_2.9.2" % "1.9.2" withSources() withJavadoc()
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test" withSources() withJavadoc()
 
