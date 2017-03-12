@@ -32,3 +32,12 @@ What makes this game interesting to score is the lookahead in the scoring for st
 - "XXXXXXXXXXXX" (12 rolls: 12 strikes) = 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 = 300
 - "9-9-9-9-9-9-9-9-9-9-" (20 rolls: 10 pairs of 9 and miss) = 9 + 9 + 9 + 9 + 9 + 9 + 9 + 9 + 9 + 9 = 90
 - "5/5/5/5/5/5/5/5/5/5/5" (21 rolls: 10 pairs of 5 and spare, with a final 5) = 10+5 + 10+5 + 10+5 + 10+5 + 10+5 + 10+5 + 10+5 + 10+5 + 10+5 + 10+5 = 150
+
+## Solution in Scala
+
+### Requirements
+- [Scala 2.12.1+](http://www.scala-lang.org/download/)
+- [sbt](http://www.scala-sbt.org/download.html)
+
+### Test
+`sbt test`
