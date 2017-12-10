@@ -62,7 +62,7 @@ miss)
 
 ### Test & Run
 ```
-go test
+go test ./...
 go run main.go "XXXXXXXXXXXX"
 ```
 
